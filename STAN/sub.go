@@ -1,4 +1,4 @@
-package main
+package STAN
 
 import (
 	"bufio"
@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-func main() {
+func TestSub() {
 
 	sc, err := stan.Connect("test-cluster", "client-123")
 	if err != nil {

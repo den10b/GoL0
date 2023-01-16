@@ -1,4 +1,4 @@
-package main
+package STAN
 
 import (
 	"fmt"
@@ -14,7 +14,7 @@ func publishh(numb int) {
 	time.Sleep(time.Duration(numb) * time.Second)
 	sc.Publish("MyChannel", sstr)
 }
-func main() {
+func TestPub() {
 	var wg sync.WaitGroup
 	go publishh(2)
 	wg.Add(1)
