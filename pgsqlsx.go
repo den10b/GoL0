@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
@@ -81,13 +82,38 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	var p Orders
-	var pp []Orders
-	err = db.Get(&p, "select * from public.orders LIMIT 1")
-	// Select записывает в pp массив полученных строк.
-	querr := fmt.Sprintf("select * from public.orders where id = '%s'", p.Id.String())
-	err = db.Select(&pp, querr)
-	i := 1
-	i = i + 1
+	var order Orders
+	var order1 Orders
+
+	err = db.Get(&order, "select * from public.orders")
+	query := fmt.Sprintf("select * from public.orders where id = '%s'", order.Id.String())
+	err = db.Get(&order1, query)
+
+	var orders []Orders
+	err = db.Select(&orders, "select * from public.orders")
+
+	for i, myOrder := range orders {
+		var delivery Delivery
+		query = fmt.Sprintf("select * from public.delivery where delivery.order_uid = '%s'", myOrder.Id.String())
+		err = db.Get(&delivery, query)
+
+		var items []Items
+		query = fmt.Sprintf("select * from public.items where items.order_uid = '%s'", myOrder.Id.String())
+		err = db.Select(&items, query)
+
+		var payment Payments
+		query = fmt.Sprintf("select * from public.payments where payments.order_uid = '%s'", myOrder.Id.String())
+		err = db.Get(&payment, query)
+
+		fmt.Println(i)
+		marOrder, _ := json.Marshal(myOrder)
+		fmt.Println(string(marOrder))
+		marDelivery, _ := json.Marshal(delivery)
+		fmt.Println(string(marDelivery))
+		marItems, _ := json.Marshal(items)
+		fmt.Println(string(marItems))
+		marPayment, _ := json.Marshal(payment)
+		fmt.Println(string(marPayment))
+	}
 
 }
