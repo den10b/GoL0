@@ -26,15 +26,13 @@ const (
 //
 //}
 
-func CloseConn(db *sqlx.DB) {
-	err := db.Close()
+func CloseConn() {
+	err := Db.Close()
 	if err != nil {
 		log.Fatalln(err)
 	}
 }
-
-func TestSQL() {
-
+func OpenConn() {
 	t := "host=%s port=%d user=%s password=%s dbname=%s sslmode=%s"
 	connectionString := fmt.Sprintf(t, host, port, user, password, dbname, sslmode)
 	var err error
@@ -43,13 +41,37 @@ func TestSQL() {
 	if err != nil {
 		log.Fatalln(err)
 	}
+}
+func GetAllOrders() ([]Orders, error) {
+	var orders []Orders
+	err := Db.Select(&orders, "select * from public.orders")
+	if err != nil {
+		return nil, err
+	}
+	return orders, nil
+}
+func GetOrder(order_id string) (Orders, error) {
+	var order Orders
+	query := fmt.Sprintf("select * from public.orders where orders.id = '%s'", order_id)
+	err := Db.Get(&order, query)
+	if err != nil {
+		return Orders{}, err
+	}
+	return order, nil
+}
 
-	defer CloseConn(Db)
+func TestSQL() {
 
+	defer CloseConn()
+	var err error
 	var order Orders
 	var order1 Orders
 
 	err = Db.Get(&order, "select * from public.orders")
+	if err != nil {
+		return
+	}
+
 	query := fmt.Sprintf("select * from public.orders where id = '%s'", order.Id.String())
 	err = Db.Get(&order1, query)
 

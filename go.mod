@@ -5,6 +5,8 @@ go 1.17
 require (
 	github.com/bluele/gcache v0.0.2
 	github.com/google/uuid v1.3.0
+	github.com/gorilla/mux v1.8.0
+	github.com/iotdog/json2table v0.0.0-20170917130055-a02b9756f9ab
 	github.com/jackc/pgx/v5 v5.2.0
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/lib/pq v1.10.4
@@ -14,9 +16,9 @@ require (
 require (
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
-	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20200714003250-2b9c44734f2b // indirect
+	github.com/leesper/holmes v0.0.0-20190916004209-307d8a307864 // indirect
 	github.com/mattn/go-colorable v0.1.6 // indirect
 	github.com/mattn/go-isatty v0.0.12 // indirect
 	github.com/nats-io/nats-server/v2 v2.9.11 // indirect
