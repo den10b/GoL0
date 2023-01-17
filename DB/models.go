@@ -51,11 +51,11 @@ type Items struct {
 type Delivery struct {
 	Uid      uuid.UUID `db:"uid" json:"uid"`
 	OrderUid uuid.UUID `db:"order_uid" json:"order_uid"`
-	Name     string    `db:"name" json:"chrt_id"`
-	Phone    string    `db:"phone" json:"track_number"`
-	Zip      string    `db:"zip" json:"price"`
-	City     string    `db:"city" json:"rid"`
-	Address  string    `db:"address" json:"name"`
-	Region   string    `db:"region" json:"sale"`
-	Email    string    `db:"email" json:"size"`
+	Name     string    `db:"name" json:"name"`
+	Phone    string    `db:"phone" json:"phone"`
+	Zip      string    `db:"zip" json:"zip"`
+	City     string    `db:"city" json:"city"`
+	Address  string    `db:"address" json:"address"`
+	Region   string    `db:"region" json:"region"`
+	Email    string    `db:"email" json:"email"`
 }
