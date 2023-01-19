@@ -29,7 +29,7 @@ func GetOrders() (map[interface{}]interface{}, error) {
 	all := ordersCache.GetALL(false)
 	return all, nil
 }
-func getOrder(orderId string) (interface{}, error) {
+func GetOrder(orderId string) (interface{}, error) {
 	return ordersCache.Get(orderId)
 }
 

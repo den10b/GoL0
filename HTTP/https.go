@@ -41,7 +41,7 @@ func allOrdersCache(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func getOrder(w http.ResponseWriter, r *http.Request) {
+func getOrderDB(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 	order, err := DB.GetOrder(params["order_id"])
@@ -52,13 +52,26 @@ func getOrder(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
+func getOrderCache(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	order, err := Cache.GetOrder(params["order_id"])
+	tpl, err := template.ParseFiles("./Static/order.html")
+	if err != nil {
+		panic(err)
+	}
+	err = tpl.Execute(w, order)
+	if err != nil {
+		panic(err)
+	}
+
+}
 
 func TestHttp() {
 	r := mux.NewRouter()
 	r.HandleFunc("/", Handlerr)
 	r.HandleFunc("/adad", Handlerr2)
 	r.HandleFunc("/order", allOrdersCache)
-	r.HandleFunc("/order/{order_id}", getOrder)
+	r.HandleFunc("/order/{order_id}", getOrderCache)
 	http.Handle("/", r)
 	err := http.ListenAndServe(":80", nil)
 	if err != nil {
