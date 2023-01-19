@@ -9,7 +9,7 @@ import (
 func main() {
 	DB.OpenConn()
 	Cache.CacheInit()
-	Cache.TestCache()
+	//Cache.TestCache()
 	HTTP.TestHttp()
 	//STAN.TestSub()
 	//STAN.TestPub()

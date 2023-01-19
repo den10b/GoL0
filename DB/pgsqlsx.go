@@ -59,6 +59,14 @@ func GetOrder(order_id string) (Orders, error) {
 	}
 	return order, nil
 }
+func GetAllItems() ([]Items, error) {
+	var items []Items
+	err := Db.Select(&items, "select * from public.orders")
+	if err != nil {
+		return nil, err
+	}
+	return items, nil
+}
 
 func TestSQL() {
 

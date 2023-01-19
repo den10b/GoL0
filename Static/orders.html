@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Red Tea Pot 250ml</title>
+</head>
+<body>
+<table>
+    <thead>
+    <tr>
+        <th>Student</th>
+        <th>Blue Pens</th>
+        <th>Red Pens</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{ range $order, $Orders := . }}
+    <tr>
+        <td>{{ $order }}</td>
+        <td>{{ $Orders.Id }}</td>
+        <td>{{ $Orders.TrackNumber }}</td>
+    </tr>
+    {{ end }}
+    </tbody>
+</table>
+</body>
+
+</html>
