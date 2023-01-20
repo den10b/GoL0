@@ -6,6 +6,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"log"
+	"time"
 )
 
 var Db *sqlx.DB
@@ -52,8 +53,15 @@ func GetAllOrders() ([]Orders, error) {
 }
 func GetOrder(order_id string) (Orders, error) {
 	var order Orders
-	query := fmt.Sprintf("select * from public.orders where orders.id = '%s'", order_id)
-	err := Db.Get(&order, query)
+	err := Db.Get(&order, "select * from public.orders where orders.id = $1", order_id)
+	if err != nil {
+		return Orders{}, err
+	}
+	return order, nil
+}
+func SetOrder(orderId string, trackNumber string, entry string, locale string, internalSignature string, customerId string, deliveryService string, shardKey string, smId int, dateCreated time.Time, oofShard string) (Orders, error) {
+	var order Orders
+	err := Db.QueryRow("INSERT INTO public.orders VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id,track_number,entry,locale,internal_signature,customer_id,delivery_service,shardkey,sm_id,date_created,oof_shard", orderId, trackNumber, entry, locale, internalSignature, customerId, deliveryService, shardKey, smId, dateCreated, oofShard).Scan(&order)
 	if err != nil {
 		return Orders{}, err
 	}
@@ -80,24 +88,25 @@ func TestSQL() {
 		return
 	}
 
-	query := fmt.Sprintf("select * from public.orders where id = '%s'", order.Id.String())
-	err = Db.Get(&order1, query)
-
+	//query := fmt.Sprintf("select * from public.orders where id = '%s'", order.Id.String())
+	err = Db.Get(&order1, "select * from public.orders where id = $1", order.Id.String())
+	getOrder, err := GetOrder(order.Id.String())
+	if err != nil {
+		return
+	}
+	fmt.Println(getOrder)
 	var orders []Orders
 	err = Db.Select(&orders, "select * from public.orders")
 
 	for i, myOrder := range orders {
 		var delivery Delivery
-		query = fmt.Sprintf("select * from public.delivery where delivery.order_uid = '%s'", myOrder.Id.String())
-		err = Db.Get(&delivery, query)
+		err = Db.Get(&delivery, "select * from public.delivery where delivery.order_uid = $1", myOrder.Id.String())
 
 		var items []Items
-		query = fmt.Sprintf("select * from public.items where items.order_uid = '%s'", myOrder.Id.String())
-		err = Db.Select(&items, query)
+		err = Db.Select(&items, "select * from public.items where items.order_uid = $1", myOrder.Id.String())
 
 		var payment Payments
-		query = fmt.Sprintf("select * from public.payments where payments.order_uid = '%s'", myOrder.Id.String())
-		err = Db.Get(&payment, query)
+		err = Db.Get(&payment, "select * from public.payments where payments.order_uid = $1", myOrder.Id.String())
 
 		fmt.Println(i)
 		marOrder, _ := json.Marshal(myOrder)

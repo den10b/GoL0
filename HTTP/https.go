@@ -10,8 +10,15 @@ import (
 	"net/http"
 )
 
-func Handlerr(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello World!")
+func emptyHandler(w http.ResponseWriter, r *http.Request) {
+	tpl, err := template.ParseFiles("./Static/index.html")
+	if err != nil {
+		panic(err)
+	}
+	err = tpl.Execute(w, "nil")
+	if err != nil {
+		panic(err)
+	}
 }
 func Handlerr2(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello World!22222")
@@ -68,7 +75,7 @@ func getOrderCache(w http.ResponseWriter, r *http.Request) {
 
 func TestHttp() {
 	r := mux.NewRouter()
-	r.HandleFunc("/", Handlerr)
+	r.HandleFunc("/", emptyHandler)
 	r.HandleFunc("/adad", Handlerr2)
 	r.HandleFunc("/order", allOrdersCache)
 	r.HandleFunc("/order/{order_id}", getOrderCache)

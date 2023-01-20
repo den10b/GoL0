@@ -6,9 +6,12 @@ import (
 )
 
 type Orders struct {
-	Id                uuid.UUID `db:"id" json:"id"`
+	Id                uuid.UUID `db:"id" json:"order_uid"`
 	TrackNumber       string    `db:"track_number" json:"track_number"`
 	Entry             string    `db:"entry" json:"entry"`
+	Delivery          Delivery  `json:"delivery"`
+	Payment           Payments  `json:"payment"`
+	Items             []Items   `json:"items"`
 	Locale            string    `db:"locale" json:"locale"`
 	InternalSignature string    `db:"internal_signature" json:"internal_signature"`
 	CustomerId        string    `db:"customer_id" json:"customer_id"`
