@@ -6,22 +6,32 @@ import (
 	"GoL0/HTTP"
 	"GoL0/STAN"
 	"bufio"
-	"fmt"
-	"github.com/google/uuid"
+	"log"
 	"os"
+	"time"
 )
 
 func main() {
-	fmt.Println(uuid.New())
-	fmt.Println(uuid.New())
-	DB.OpenConn()
-	DB.GetAllOrders()
-	Cache.CacheInit()
+	err := DB.OpenConn()
+	if err != nil {
+		log.Printf("Error initing DB connection: %s\n", err)
+		return
+	}
+	err = Cache.CacheInit()
+	if err != nil {
+		log.Printf("Error initing cache: %s\n", err)
+		return
+	}
 	//Cache.TestCache()
-	go HTTP.TestHttp()
-	go STAN.TestSub()
-	STAN.TestJSONPub()
-	//STAN.TestPub()
+	go HTTP.InitHttp()
+	go STAN.InitSub()
+	time.Sleep(3 * time.Second)
+	STAN.TestJSONPub("testJSON.json")
+
 	input := bufio.NewScanner(os.Stdin)
 	input.Scan()
+
+	STAN.QuitSub()
+	DB.CloseConn()
+
 }

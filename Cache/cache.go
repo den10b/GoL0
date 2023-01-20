@@ -29,6 +29,9 @@ func GetOrders() (map[interface{}]interface{}, error) {
 func GetOrder(orderId string) (interface{}, error) {
 	return myCache.Get(orderId)
 }
+func AddOrder(order DB.Orders) error {
+	return myCache.Set(order.Id.String(), order)
+}
 
 //func TestCache() {
 //	value1, err := itemsCache.Get("key")

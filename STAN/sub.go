@@ -1,20 +1,27 @@
 package STAN
 
 import (
+	"GoL0/Cache"
 	"GoL0/DB"
-	"bufio"
 	"encoding/json"
-	"fmt"
 	"github.com/google/uuid"
 	stan "github.com/nats-io/stan.go"
-	"os"
+	"log"
 )
+
+var sc stan.Conn
+var sub stan.Subscription
 
 func MsgReciever(m *stan.Msg) {
 	var order DB.Orders
 	err := json.Unmarshal(m.Data, &order)
 	if err != nil {
-		fmt.Printf("Received a message but not a json: %s\n", string(m.Data))
+		log.Printf("Received a message but not a json: %s\n", string(m.Data))
+		return
+	}
+	_, err = Cache.GetOrder(order.Id.String())
+	if err == nil {
+		log.Printf("Order %s already added", order.Id.String())
 		return
 	}
 	order.Delivery.OrderUid = order.Id
@@ -22,28 +29,55 @@ func MsgReciever(m *stan.Msg) {
 
 	order.Payment.OrderUid = order.Id
 
-	for _, item := range order.Items {
-		item.OrderUid = order.Id
-		item.Uid = uuid.New()
+	for i, _ := range order.Items {
+		order.Items[i].OrderUid = order.Id
+		order.Items[i].Uid = uuid.New()
 	}
 	err = DB.SetOrder(order)
 	if err != nil {
-		return
+		log.Printf("Error adding order to DB: %s", err)
 	}
-	fmt.Printf(order.Id.String())
-	fmt.Printf("Received an: %s\n", string(m.Data))
+	err = DB.SetItems(order.Items)
+	if err != nil {
+		log.Printf("Error adding items to DB: %s", err)
+	}
+	err = DB.SetDelivery(order.Delivery)
+	if err != nil {
+		log.Printf("Error adding delivery to DB: %s", err)
+	}
+	err = DB.SetPayment(order.Payment)
+	if err != nil {
+		log.Printf("Error adding payment to DB: %s", err)
+	}
+	err = Cache.AddOrder(order)
+	if err != nil {
+		log.Printf("Error adding order to Cache: %s", err)
+	}
+
+	log.Printf("Received an order: %s\n", order.Id.String())
 }
 
-func TestSub() {
-
-	sc, err := stan.Connect("test-cluster", "client-123")
+func InitSub() {
+	var err error
+	sc, err = stan.Connect("test-cluster", "client-123")
 	if err != nil {
 		panic(err)
 	}
-	sub, _ := sc.Subscribe("MyChannel", MsgReciever)
+	channelName := "MyChannel"
+	sub, err = sc.Subscribe(channelName, MsgReciever)
+	if err != nil {
+		panic(err)
+	}
+	log.Printf("Subscribed to channel: %s\n", channelName)
+}
 
-	input := bufio.NewScanner(os.Stdin)
-	input.Scan()
-	sub.Unsubscribe()
-	sc.Close()
+func QuitSub() {
+	err := sub.Unsubscribe()
+	if err != nil {
+		log.Printf("Error unsubscribing: %s", err)
+	}
+	err = sc.Close()
+	if err != nil {
+		log.Printf("Error closing: %s", err)
+	}
 }

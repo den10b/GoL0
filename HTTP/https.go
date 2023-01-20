@@ -2,12 +2,10 @@ package HTTP
 
 import (
 	"GoL0/Cache"
-	"GoL0/DB"
-	"encoding/json"
-	"fmt"
 	"github.com/gorilla/mux"
 	"html/template"
 	"net/http"
+	"os"
 )
 
 func emptyHandler(w http.ResponseWriter, r *http.Request) {
@@ -20,21 +18,15 @@ func emptyHandler(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 }
-func Handlerr2(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello World!22222")
+func cssHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/css")
+	stuff, _ := os.ReadFile("./Static/style.css")
+	_, err := w.Write(stuff)
+	if err != nil {
+		return
+	}
 }
-func allOrdersDB(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	orders, err := DB.GetAllOrders()
-	if err != nil {
-		return
-	}
-	err = json.NewEncoder(w).Encode(orders)
-	if err != nil {
-		return
-	}
 
-}
 func allOrdersCache(w http.ResponseWriter, r *http.Request) {
 	orders, err := Cache.GetOrders()
 	tpl, err := template.ParseFiles("./Static/orders.html")
@@ -44,18 +36,6 @@ func allOrdersCache(w http.ResponseWriter, r *http.Request) {
 	err = tpl.Execute(w, orders)
 	if err != nil {
 		panic(err)
-	}
-
-}
-
-func getOrderDB(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	params := mux.Vars(r)
-	order, err := DB.GetOrder(params["order_id"])
-	err = json.NewEncoder(w).Encode(order)
-
-	if err != nil {
-		return
 	}
 
 }
@@ -73,15 +53,28 @@ func getOrderCache(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func TestHttp() {
+//	func getOrderDB(w http.ResponseWriter, r *http.Request) {
+//		w.Header().Set("Content-Type", "application/json")
+//		params := mux.Vars(r)
+//		order, err := DB.GetOrder(params["order_id"])
+//		err = json.NewEncoder(w).Encode(order)
+//
+//		if err != nil {
+//			return
+//		}
+//
+// }
+
+func InitHttp() {
 	r := mux.NewRouter()
+	r.HandleFunc("/style.css", cssHandler)
+	r.HandleFunc("/order/style.css", cssHandler)
 	r.HandleFunc("/", emptyHandler)
-	r.HandleFunc("/adad", Handlerr2)
 	r.HandleFunc("/order", allOrdersCache)
 	r.HandleFunc("/order/{order_id}", getOrderCache)
 	http.Handle("/", r)
 	err := http.ListenAndServe(":80", nil)
 	if err != nil {
-		return
+		panic(err)
 	}
 }
