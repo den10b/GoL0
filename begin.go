@@ -15,7 +15,7 @@ func main() {
 	fmt.Println(uuid.New())
 	fmt.Println(uuid.New())
 	DB.OpenConn()
-	//DB.TestSQL()
+	DB.GetAllOrders()
 	Cache.CacheInit()
 	//Cache.TestCache()
 	go HTTP.TestHttp()

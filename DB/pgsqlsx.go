@@ -6,7 +6,6 @@ import (
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"log"
-	"time"
 )
 
 var Db *sqlx.DB
@@ -49,6 +48,11 @@ func GetAllOrders() ([]Orders, error) {
 	if err != nil {
 		return nil, err
 	}
+	for i, _ := range orders {
+		err = Db.Get(&orders[i].Delivery, "select * from public.delivery where delivery.order_uid = $1", orders[i].Id.String())
+		err = Db.Select(&orders[i].Items, "select * from public.items where items.order_uid = $1", orders[i].Id.String())
+		err = Db.Get(&orders[i].Payment, "select * from public.payments where payments.order_uid = $1", orders[i].Id.String())
+	}
 	return orders, nil
 }
 func GetOrder(order_id string) (Orders, error) {
@@ -59,13 +63,9 @@ func GetOrder(order_id string) (Orders, error) {
 	}
 	return order, nil
 }
-func SetOrder(orderId string, trackNumber string, entry string, locale string, internalSignature string, customerId string, deliveryService string, shardKey string, smId int, dateCreated time.Time, oofShard string) (Orders, error) {
-	var order Orders
-	err := Db.QueryRow("INSERT INTO public.orders VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id,track_number,entry,locale,internal_signature,customer_id,delivery_service,shardkey,sm_id,date_created,oof_shard", orderId, trackNumber, entry, locale, internalSignature, customerId, deliveryService, shardKey, smId, dateCreated, oofShard).Scan(&order)
-	if err != nil {
-		return Orders{}, err
-	}
-	return order, nil
+func SetOrder(order Orders) error {
+	_, err := Db.Query("INSERT INTO public.orders VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)", order.Id, order.TrackNumber, order.Entry, order.Locale, order.InternalSignature, order.CustomerId, order.DeliveryService, order.Shardkey, order.SmId, order.DateCreated, order.OofShard)
+	return err
 }
 func GetAllItems() ([]Items, error) {
 	var items []Items
