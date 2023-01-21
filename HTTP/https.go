@@ -37,8 +37,41 @@ func allOrdersCache(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
-
 }
+func allItemsCache(w http.ResponseWriter, r *http.Request) {
+	orders, err := Cache.GetOrders()
+	tpl, err := template.ParseFiles("./Static/items.html")
+	if err != nil {
+		panic(err)
+	}
+	err = tpl.Execute(w, orders)
+	if err != nil {
+		panic(err)
+	}
+}
+func allDeliveriesCache(w http.ResponseWriter, r *http.Request) {
+	orders, err := Cache.GetOrders()
+	tpl, err := template.ParseFiles("./Static/deliveries.html")
+	if err != nil {
+		panic(err)
+	}
+	err = tpl.Execute(w, orders)
+	if err != nil {
+		panic(err)
+	}
+}
+func allPaymentsCache(w http.ResponseWriter, r *http.Request) {
+	orders, err := Cache.GetOrders()
+	tpl, err := template.ParseFiles("./Static/payments.html")
+	if err != nil {
+		panic(err)
+	}
+	err = tpl.Execute(w, orders)
+	if err != nil {
+		panic(err)
+	}
+}
+
 func getOrderCache(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	order, err := Cache.GetOrder(params["order_id"])
@@ -70,6 +103,9 @@ func InitHttp() {
 	r.HandleFunc("/style.css", cssHandler)
 	r.HandleFunc("/order/style.css", cssHandler)
 	r.HandleFunc("/", emptyHandler)
+	r.HandleFunc("/deliveries", allDeliveriesCache)
+	r.HandleFunc("/items", allItemsCache)
+	r.HandleFunc("/payments", allPaymentsCache)
 	r.HandleFunc("/order", allOrdersCache)
 	r.HandleFunc("/order/{order_id}", getOrderCache)
 	http.Handle("/", r)

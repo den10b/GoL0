@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Все Платежи</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<table>
+  <thead>
+  <tr>
+    <th>Transaction</th>
+    <th>OrderUid</th>
+    <th>RequestId</th>
+    <th>Currency</th>
+    <th>Provider</th>
+    <th>Amount</th>
+    <th>PaymentDT</th>
+    <th>Bank</th>
+    <th>DeliveryCost</th>
+    <th>GoodsTotal</th>
+    <th>CustomFee</th>
+  </tr>
+  </thead>
+  <tbody>
+  {{ range $order, $Orders := . }}
+  <tr>
+    <td>{{ $Orders.Payments.Transaction }}</td>
+    <td>{{ $order }}</td>
+    <td>{{ $Orders.Payments.RequestId }}</td>
+    <td>{{ $Orders.Payments.Currency }}</td>
+    <td>{{ $Orders.Payments.Provider }}</td>
+    <td>{{ $Orders.Payments.Amount }}</td>
+    <td>{{ $Orders.Payments.PaymentDT }}</td>
+    <td>{{ $Orders.Payments.Bank }}</td>
+    <td>{{ $Orders.Payments.DeliveryCost }}</td>
+    <td>{{ $Orders.Payments.GoodsTotal }}</td>
+    <td>{{ $Orders.Payments.CustomFee }}</td>
+  </tr>
+  {{ end }}
+  </tbody>
+</table>
+</body>
+
+</html>

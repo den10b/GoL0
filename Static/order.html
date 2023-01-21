@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Все Заказы</title>
+    <title>Заказ</title>
     <link href="style.css" media="screen" rel="stylesheet" type="text/css"/>
 </head>
 <body>
@@ -26,10 +26,34 @@ Delivery<br>
   Email {{ .Delivery.Email }}<br>
   Payment {{ .Payment.Transaction }}<br>
 <hr>
-Items
+Payment<br>
+Transaction {{ .Payments.Transaction }}<br>
+RequestId {{ .Payments.RequestId }}<br>
+Currency {{ .Payments.Currency }}<br>
+Provider {{ .Payments.Provider }}<br>
+Amount {{ .Payments.Amount }}<br>
+PaymentDT {{ .Payments.Bank }}<br>
+Bank {{ .Payments.Bank }}<br>
+DeliveryCost {{ .Payments.DeliveryCost }}<br>
+GoodsTotal {{ .Payments.GoodsTotal }}<br>
+CustomFee {{ .Payments.CustomFee }}<br>
+<hr>
+Items: [
 {{ range $pep:=.Items}}
-{{$pep.Uid}},
-{{ end }}<br>
+Uid {{$pep.Uid}}<br>
+ChrtId {{$pep.ChrtId}}<br>
+TrackNumber {{$pep.TrackNumber}}<br>
+Price {{$pep.Price}}<br>
+Rid {{$pep.Rid}}<br>
+Name {{$pep.Name}}<br>
+Sale {{$pep.Sale}}<br>
+Size {{$pep.Size}}<br>
+TotalPrice {{$pep.TotalPrice}}<br>
+NmId {{$pep.NmId}}<br>
+Brand {{$pep.Brand}}<br>
+Status {{$pep.Status}}<br>
+<hr>
+{{ end }} ]<br>
 Locale {{ .Locale }}<br>
 InternalSignature {{ .InternalSignature }}<br>
 CustomerId {{ .CustomerId }}<br>

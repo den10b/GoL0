@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Все Вещи</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<table>
+  <thead>
+  <tr>
+    <th>Uid</th>
+    <th>OrderUid</th>
+    <th>ChrtId</th>
+    <th>TrackNumber</th>
+    <th>Price</th>
+    <th>Rid</th>
+    <th>Name</th>
+    <th>Sale</th>
+    <th>Size</th>
+    <th>TotalPrice</th>
+    <th>NmId</th>
+    <th>Brand</th>
+    <th>Status</th>
+  </tr>
+  </thead>
+  <tbody>
+  {{ range $order, $Orders := . }}
+
+      {{ range $pep:=$Orders.Items}}
+  <tr>
+    <td>{{ $pep.Uid }}</td>
+    <td>{{ $order }}</td>
+    <td>{{ $pep.ChrtId }}</td>
+    <td>{{ $pep.TrackNumber }}</td>
+    <td>{{ $pep.Price }}</td>
+    <td>{{ $pep.Rid }}</td>
+    <td>{{ $pep.Name }}</td>
+    <td>{{ $pep.Sale }}</td>
+    <td>{{ $pep.Size }}</td>
+    <td>{{ $pep.TotalPrice }}</td>
+    <td>{{ $pep.NmId }}</td>
+    <td>{{ $pep.Brand }}</td>
+    <td>{{ $pep.Status }}</td>
+    </tr>
+      {{ end }}
+
+  {{ end }}
+  </tbody>
+</table>
+</body>
+
+</html>
