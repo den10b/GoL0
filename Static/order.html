@@ -27,18 +27,19 @@ Delivery<br>
   Payment {{ .Payment.Transaction }}<br>
 <hr>
 Payment<br>
-Transaction {{ .Payments.Transaction }}<br>
-RequestId {{ .Payments.RequestId }}<br>
-Currency {{ .Payments.Currency }}<br>
-Provider {{ .Payments.Provider }}<br>
-Amount {{ .Payments.Amount }}<br>
-PaymentDT {{ .Payments.Bank }}<br>
-Bank {{ .Payments.Bank }}<br>
-DeliveryCost {{ .Payments.DeliveryCost }}<br>
-GoodsTotal {{ .Payments.GoodsTotal }}<br>
-CustomFee {{ .Payments.CustomFee }}<br>
+Transaction {{ .Payment.Transaction }}<br>
+RequestId {{ .Payment.RequestId }}<br>
+Currency {{ .Payment.Currency }}<br>
+Provider {{ .Payment.Provider }}<br>
+Amount {{ .Payment.Amount }}<br>
+PaymentDT {{ .Payment.Bank }}<br>
+Bank {{ .Payment.Bank }}<br>
+DeliveryCost {{ .Payment.DeliveryCost }}<br>
+GoodsTotal {{ .Payment.GoodsTotal }}<br>
+CustomFee {{ .Payment.CustomFee }}<br>
 <hr>
-Items: [
+Items:
+<hr>
 {{ range $pep:=.Items}}
 Uid {{$pep.Uid}}<br>
 ChrtId {{$pep.ChrtId}}<br>
@@ -53,7 +54,7 @@ NmId {{$pep.NmId}}<br>
 Brand {{$pep.Brand}}<br>
 Status {{$pep.Status}}<br>
 <hr>
-{{ end }} ]<br>
+{{ end }}
 Locale {{ .Locale }}<br>
 InternalSignature {{ .InternalSignature }}<br>
 CustomerId {{ .CustomerId }}<br>
