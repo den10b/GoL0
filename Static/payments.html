@@ -24,17 +24,17 @@
   <tbody>
   {{ range $order, $Orders := . }}
   <tr>
-    <td>{{ $Orders.Payments.Transaction }}</td>
+    <td>{{ $Orders.Payment.Transaction }}</td>
     <td>{{ $order }}</td>
-    <td>{{ $Orders.Payments.RequestId }}</td>
-    <td>{{ $Orders.Payments.Currency }}</td>
-    <td>{{ $Orders.Payments.Provider }}</td>
-    <td>{{ $Orders.Payments.Amount }}</td>
-    <td>{{ $Orders.Payments.PaymentDT }}</td>
-    <td>{{ $Orders.Payments.Bank }}</td>
-    <td>{{ $Orders.Payments.DeliveryCost }}</td>
-    <td>{{ $Orders.Payments.GoodsTotal }}</td>
-    <td>{{ $Orders.Payments.CustomFee }}</td>
+    <td>{{ $Orders.Payment.RequestId }}</td>
+    <td>{{ $Orders.Payment.Currency }}</td>
+    <td>{{ $Orders.Payment.Provider }}</td>
+    <td>{{ $Orders.Payment.Amount }}</td>
+    <td>{{ $Orders.Payment.PaymentDT }}</td>
+    <td>{{ $Orders.Payment.Bank }}</td>
+    <td>{{ $Orders.Payment.DeliveryCost }}</td>
+    <td>{{ $Orders.Payment.GoodsTotal }}</td>
+    <td>{{ $Orders.Payment.CustomFee }}</td>
   </tr>
   {{ end }}
   </tbody>
