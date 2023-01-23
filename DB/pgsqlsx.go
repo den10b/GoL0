@@ -18,13 +18,6 @@ const (
 	sslmode  = "disable"
 )
 
-//func getItems(uuid uuid.UUID) []Items {
-//	var items []Items
-//	query := fmt.Sprintf("select * from public.items where items.order_uid = '%s'", uuid.String())
-//	err = db.Select(&items, query)
-//
-//}
-
 func CloseConn() {
 	err := Db.Close()
 	if err != nil {
@@ -39,7 +32,7 @@ func OpenConn() error {
 	return err
 }
 
-func GetAllOrders() ([]Orders, error) {
+func GetAllOrders() ([]Orders, error) { //Получение всех заказов из бд (Происходит 1 раз при запуске сервиса)
 	var orders []Orders
 	err := Db.Select(&orders, "select * from public.orders")
 	if err != nil {
@@ -52,9 +45,9 @@ func GetAllOrders() ([]Orders, error) {
 	}
 	return orders, nil
 }
-func GetOrder(order_id string) (Orders, error) {
+func GetOrder(orderId string) (Orders, error) { //Получение одного заказа из бд
 	var order Orders
-	err := Db.Get(&order, "select * from public.orders where orders.id = $1", order_id)
+	err := Db.Get(&order, "select * from public.orders where orders.id = $1", orderId)
 	if err != nil {
 		return Orders{}, err
 	}

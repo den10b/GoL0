@@ -8,7 +8,6 @@ import (
 	"bufio"
 	"log"
 	"os"
-	"time"
 )
 
 func main() {
@@ -25,10 +24,15 @@ func main() {
 	//Cache.TestCache()
 	go HTTP.InitHttp()
 	go STAN.InitSub()
-	time.Sleep(3 * time.Second)
+
+	log.Printf("Нажмите enter для отправки файла в канал")
+	input := bufio.NewScanner(os.Stdin)
+	input.Scan()
+
 	STAN.TestJSONPub("testJSON.json")
 
-	input := bufio.NewScanner(os.Stdin)
+	log.Printf("Нажмите enter для завершения работы сервиса")
+	input = bufio.NewScanner(os.Stdin)
 	input.Scan()
 
 	STAN.QuitSub()
